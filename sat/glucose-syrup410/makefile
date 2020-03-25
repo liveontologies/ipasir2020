@@ -33,7 +33,7 @@ all: $(TARGET)
 
 clean:
 	rm -rf $(DIR)
-	rm -f *.o *.a *.tar.gz *.dylib
+	rm -f *.o *.a *.tgz *.dylib
 
 #-----------------------------------------------------------------------#
 #- INVISIBLE INTERNAL SUB RULES ----------------------------------------#
@@ -51,8 +51,8 @@ libipasir$(SIG).a: .FORCE
 	tar xvf $(DIR).tgz
 	@# apply patch for set_terminate and learn_callback
 	@#
-	patch $(DIR)/core/Solver.h < glucose-h.patch
-	patch $(DIR)/core/Solver.cc < glucose-cc.patch
+	patch $(DIR)/core/Solver.h < glucose-syrup-h.patch
+	patch $(DIR)/core/Solver.cc < glucose-syrup-cc.patch
 	@#
 	@# patch verbose output
 	@#

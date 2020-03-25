@@ -15,12 +15,14 @@ VERSION=bcj
 
 SIG=$(NAME)$(VERSION)
 DIR=$(NAME)-$(VERSION)
-TARGET=libipasir$(SIG).a
+#TARGET=libipasir$(SIG).a
+TARGET=lib$(SIG).dylib
 
 #-----------------------------------------------------------------------#
 
 CC=g++
-CFLAGS=-Wall -DNDEBUG -O3
+CFLAGS=-Wall -DNDEBUG -O3 -fPIC
+export CFLAGS
 
 #-----------------------------------------------------------------------#
 #- REQUIRED TOP RULES --------------------------------------------------#
@@ -30,11 +32,14 @@ all: $(TARGET)
 
 clean:
 	rm -rf $(DIR)
-	rm -f *.o *.a *.tar.gz
+	rm -f *.o *.a *.tar.gz *.dylib
 
 #-----------------------------------------------------------------------#
 #- INVISIBLE INTERNAL SUB RULES ----------------------------------------#
 #-----------------------------------------------------------------------#
+
+lib$(SIG).dylib: libipasir$(SIG).a ipasir$(NAME)glue.o
+	$(CC) $(CFLAGS) -g -I. -dynamiclib -install_name lib$(NAME).dylib -o $@ $^
 
 libipasir$(SIG).a: .FORCE
 	@#
@@ -56,8 +61,8 @@ libipasir$(SIG).a: .FORCE
 	@#
 	@# merge library and glue code into target
 	@#
-	cp $(DIR)/liblgl.a $(TARGET)
-	ar r $(TARGET) ipasir$(NAME)glue.o
+	cp $(DIR)/liblgl.a $@ 
+	ar r $@ ipasir$(NAME)glue.o
 
 #-----------------------------------------------------------------------#
 #- LOCAL GLUE RULES ----------------------------------------------------#

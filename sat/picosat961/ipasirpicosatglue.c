@@ -10,7 +10,7 @@ void * ipasir_init () {
   void * res = picosat_init ();
   sprintf (prefix, "c [%s] ", sig);
   picosat_set_prefix (res, prefix);
-  picosat_set_verbosity (res, 1);
+  picosat_set_verbosity (res, 0);
   picosat_set_output (res, stdout);
   return res;
 }
