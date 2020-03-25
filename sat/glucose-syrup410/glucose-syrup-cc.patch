@@ -1,0 +1,46 @@
+--- Solver.cc.orig	2020-03-25 23:26:03.000000000 +0100
++++ Solver.cc	2020-03-25 23:26:12.000000000 +0100
+@@ -122,9 +122,10 @@
+ 
+ Solver::Solver() :
+ 
++termCallback (NULL), learnCallbackBuffer (NULL), learnCallback (NULL)
+ // Parameters (user settable):
+ //
+-verbosity(0)
++, verbosity(0)
+ , showModel(0)
+ , K(opt_K)
+ , R(opt_R)
+@@ -314,6 +315,7 @@
+ 
+ 
+ Solver::~Solver() {
++    free(this->learnCallbackBuffer);
+ }
+ 
+ 
+@@ -1552,6 +1554,14 @@
+                 }
+             }
+ 
++            if (learnCallback != 0 && learnt_clause.size() <= learnCallbackLimit) {
++              for (int i = 0; i < learnt_clause.size(); i++) {
++                Lit lit = learnt_clause[i];
++                learnCallbackBuffer[i] = sign(lit) ? -(var(lit)+1) : (var(lit)+1);
++              }
++              learnCallbackBuffer[learnt_clause.size()] = 0;
++              learnCallback(learnCallbackState, learnCallbackBuffer);
++            }
+ 
+             if(learnt_clause.size() == 1) {
+                 uncheckedEnqueue(learnt_clause[0]);
+@@ -1974,7 +1984,7 @@
+     ClauseAllocator to(ca.size() - ca.wasted());
+     relocAll(to);
+     if(verbosity >= 2)
+-        printf("|  Garbage collection:   %12d bytes => %12d bytes             |\n",
++        printf("c [glucose-syrup4.1] |  Garbage collection:   %12d bytes => %12d bytes             |\n",
+                ca.size() * ClauseAllocator::Unit_Size, to.size() * ClauseAllocator::Unit_Size);
+     to.moveTo(ca);
+ }
