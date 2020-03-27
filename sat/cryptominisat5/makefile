@@ -51,6 +51,10 @@ libipasir$(SIG).a: .FORCE
 	wget "https://github.com/msoos/$(NAME)/archive/$(VERSION).tar.gz"
 	tar xvf $(VERSION).tar.gz
 	@#
+	@# apply patch for set_terminate and learn_callback
+	@#
+	patch $(DIR)/src/ipasir.cpp < ipasir.cpp.patch
+	@#
 	@# configure and build library
 	@#
 	cd $(DIR); ../build.sh
