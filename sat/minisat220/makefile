@@ -60,8 +60,7 @@ libipasir$(SIG).a: .FORCE
 	@#
 	@# apply patch for set_terminate and learn_callback
 	@#
-	patch minisat-220/minisat/core/Solver.cc < minisat-cc.patch
-	patch minisat-220/minisat/core/Solver.h < minisat-h.patch
+	patch -p0 < minisat-220.patch
 	@#
 	@# patch verbose output
 	@#
