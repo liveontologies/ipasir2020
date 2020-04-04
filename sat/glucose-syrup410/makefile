@@ -51,8 +51,7 @@ libipasir$(SIG).a: .FORCE
 	tar xvf $(DIR).tgz
 	@# apply patch for set_terminate and learn_callback
 	@#
-	patch $(DIR)/core/Solver.h < glucose-syrup-h.patch
-	patch $(DIR)/core/Solver.cc < glucose-syrup-cc.patch
+	patch -p0 < $(DIR).patch
 	@#
 	@# patch verbose output
 	@#
